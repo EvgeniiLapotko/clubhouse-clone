@@ -1,45 +1,94 @@
-import styles from './EnterPhone.module.scss';
+import styles from './ActivateCode.module.scss';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
-import NumberFormat from 'react-number-format';
 import { useState } from 'react';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-type InputValue = {
-  formattedValue: string;
-  value: string;
-};
+export const ActivateCodeStep = () => {
+  const [code, setCode] = useState(['', '', '', '']);
+  const [isLoading, setIsLoading] = useState(false);
 
-export const EnterPhoneStep = () => {
-  const [inputValues, setValue] = useState<InputValue>({} as InputValue);
+  const nextDisabled = code.some((v) => !v);
 
-  const nextDisabled = !inputValues.formattedValue || inputValues.formattedValue.includes('_');
+  const handleChangeInput = (e) => {
+    const id = Number(e.target.getAttribute('id')) - 1;
+    const value = e.target.value;
+    setCode((prev) => {
+      const newArr = [...prev];
+      newArr[id] = value;
+      return newArr;
+    });
+    if (e.target.nextSibling) {
+      e.target.nextSibling.focus();
+    }
+  };
 
   return (
     <>
       <StepInfo
-        title='Enter your phone number?'
-        description='Without number we will not give you use it'
+        title='Enter your activate code'
+        description='It was send to your phone'
+        icon={<CheckCircleOutlineIcon />}
       />
+      <div style={{ opacity: isLoading ? 0.5 : undefined }}>
+        <WhiteBlock className={styles.block}>
+          <div className={styles.inputBlock}>
+            <input
+              type='tel'
+              placeholder='X'
+              maxLength={1}
+              id='1'
+              onChange={handleChangeInput}
+              value={code[0]}
+              disabled={isLoading}
+            />
+            <input
+              type='tel'
+              placeholder='X'
+              maxLength={1}
+              id='2'
+              onChange={handleChangeInput}
+              value={code[1]}
+              disabled={isLoading}
+            />
+            <input
+              type='tel'
+              placeholder='X'
+              maxLength={1}
+              id='3'
+              onChange={handleChangeInput}
+              value={code[2]}
+              disabled={isLoading}
+            />
+            <input
+              type='tel'
+              placeholder='X'
+              maxLength={1}
+              id='4'
+              onChange={handleChangeInput}
+              value={code[3]}
+              disabled={isLoading}
+            />
+          </div>
 
-      <WhiteBlock className={styles.block}>
-        <h3 className={styles.title}>Enter Phone Number!</h3>
-
-        <NumberFormat
-          className={styles.phoneBlock}
-          format='+# (###) ###-##-##'
-          mask='_'
-          placeholder='+7 (999) 333-22-11'
-          value={inputValues.value}
-          onValueChange={({ formattedValue, value }) => {
-            setValue({ formattedValue, value });
-          }}
-        />
-
-        <div>
-          <Button disabled={nextDisabled}>Next</Button>
+          <div>
+            <Button disabled={nextDisabled || isLoading} onClick={() => setIsLoading(true)}>
+              Activate
+            </Button>
+          </div>
+        </WhiteBlock>
+      </div>
+      {isLoading && (
+        <div className={styles.ldsEllipsisWrapper}>
+          <div className={styles.ldsEllipsis}>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
-      </WhiteBlock>
+      )}
     </>
   );
 };

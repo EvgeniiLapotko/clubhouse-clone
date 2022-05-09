@@ -1,8 +1,18 @@
 import clsx from 'clsx';
 
 import styles from './Button.module.scss';
+import React from 'react';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
-export const Button = ({ onClick, children, disabled, color, className }) => {
+interface Button {
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  children: string;
+  disabled?: boolean;
+  color?: 'green' | 'gray';
+  className?: string;
+}
+
+export const Button: React.FC<Button> = ({ onClick, children, disabled, color, className }) => {
   const colors = {
     green: styles.buttonGreen,
     gray: styles.buttonGray,
@@ -15,6 +25,7 @@ export const Button = ({ onClick, children, disabled, color, className }) => {
       className={clsx(className, styles.button, colors[color])}
     >
       {children}
+      <ArrowRightAltIcon />
     </button>
   );
 };

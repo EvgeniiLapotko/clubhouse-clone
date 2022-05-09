@@ -1,9 +1,16 @@
 .block {
-  margin: 0 auto;
+  margin: 100px auto -50px;
 }
 .title {
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 .description {
+  font-weight: 300;
+  color: #222;
 }
-.img {
+.icon {
+  & svg {
+    font-size: 60px;
+  }
 }

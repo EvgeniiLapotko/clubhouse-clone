@@ -14,10 +14,7 @@ export const WelcomeStep = () => {
         we're adding people gradually to make sure nothing breaks;)
       </p>
       <div>
-        <Button>
-          Get your username
-          {/*<img className='d-ib ml-10 ' src='./static/arrow.png' alt='arrow' />*/}
-        </Button>
+        <Button>Get your username</Button>
       </div>
       <div className='link mt-15 cup d-ib'>Have an invite text? Sign in</div>
     </WhiteBlock>

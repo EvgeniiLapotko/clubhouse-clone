@@ -14,6 +14,15 @@
   }
 }
 
+.input {
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 50%;
+  border-radius: 50px;
+  outline: none;
+  border: 1px solid gray;
+}
+
 .handWaveImg {
   animation-name: wave-animation;
   animation-duration: 3s;
@@ -24,6 +33,14 @@
   height: 2.5rem;
   margin-right: 5px;
   margin-bottom: 3px;
+}
+
+.phoneBlock {
+  margin-bottom: 25px;
+  font-size: 26px;
+  padding: 12px;
+  border-radius: 3px;
+  border: 1px solid #aaa;
 }
 
 @keyframes wave-animation {
