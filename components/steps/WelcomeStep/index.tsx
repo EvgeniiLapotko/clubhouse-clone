@@ -1,8 +1,12 @@
 import styles from './WelcomeStep.module.scss';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
+import React, { useContext } from 'react';
+import { MainContext } from '../../../pages';
 
-export const WelcomeStep = () => {
+export const WelcomeStep: React.FC = () => {
+  const { onNextStep } = useContext(MainContext);
+
   return (
     <WhiteBlock className={styles.block}>
       <h3 className={styles.title}>
@@ -14,7 +18,7 @@ export const WelcomeStep = () => {
         we're adding people gradually to make sure nothing breaks;)
       </p>
       <div>
-        <Button>Get your username</Button>
+        <Button onClick={onNextStep}>Get your username</Button>
       </div>
       <div className='link mt-15 cup d-ib'>Have an invite text? Sign in</div>
     </WhiteBlock>

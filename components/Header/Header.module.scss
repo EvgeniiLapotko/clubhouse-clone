@@ -1,0 +1,32 @@
+.block {
+  padding: 20px;
+  border-bottom: 1px solid #d1d1d1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  img {
+    width: 25px;
+    height: 25px;
+  }
+  div {
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  span {
+    display: inline-block;
+    padding-right: 10px;
+    font-weight: 600;
+    font-size: 18px;
+  }
+}

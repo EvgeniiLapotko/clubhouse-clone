@@ -3,8 +3,9 @@ import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
 import NumberFormat from 'react-number-format';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import PhoneIcon from '@mui/icons-material/Phone';
+import { MainContext } from '../../../pages';
 
 type InputValue = {
   formattedValue: string;
@@ -13,6 +14,7 @@ type InputValue = {
 
 export const EnterPhoneStep = () => {
   const [inputValues, setValue] = useState<InputValue>({} as InputValue);
+  const { onNextStep } = useContext(MainContext);
 
   const nextDisabled = !inputValues.formattedValue || inputValues.formattedValue.includes('_');
 
@@ -39,7 +41,9 @@ export const EnterPhoneStep = () => {
         />
 
         <div>
-          <Button disabled={nextDisabled}>Next</Button>
+          <Button disabled={nextDisabled} onClick={onNextStep}>
+            Next
+          </Button>
         </div>
       </WhiteBlock>
     </>

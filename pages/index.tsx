@@ -1,6 +1,6 @@
 import { WelcomeStep } from '../components/steps/WelcomeStep';
 import { EnterPhoneStep } from '../components/steps/EnterPhoneStep';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NameStep } from '../components/steps/NameStep';
 import { ChoosePhotoStep } from '../components/steps/ChoosePhotoStep';
 import { ActivateCodeStep } from '../components/steps/ActivadeCodeStep';
@@ -13,13 +13,24 @@ const stepsComponent = {
   4: ActivateCodeStep,
 };
 
+type MainContextProps = {
+  onNextStep: () => void;
+  step: number;
+};
+
+export const MainContext = React.createContext<MainContextProps>({} as MainContextProps);
+
 export default function Home() {
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(0);
+
+  const onNextStep = () => {
+    setStep((prev) => prev + 1);
+  };
 
   const Step = stepsComponent[step];
   return (
-    <div>
+    <MainContext.Provider value={{ step, onNextStep }}>
       <Step />
-    </div>
+    </MainContext.Provider>
   );
 }

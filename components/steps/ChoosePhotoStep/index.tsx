@@ -2,13 +2,15 @@ import styles from './Photo.module.scss';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { MainContext } from '../../../pages';
 
 export const ChoosePhotoStep: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [avatar, setAvatar] = useState<string>('');
+  const { onNextStep } = useContext(MainContext);
 
   const handleChangeImage = (e: Event): void => {
     const file = (e.target as HTMLInputElement).files[0];
@@ -38,10 +40,7 @@ export const ChoosePhotoStep: React.FC = () => {
         </div>
         <input id='image' ref={inputRef} hidden type='file' />
         <div>
-          <Button>
-            Next
-            {/*<img className='d-ib ml-10 ' src='./static/arrow.png' alt='arrow' />*/}
-          </Button>
+          <Button onClick={onNextStep}>Next</Button>
         </div>
       </WhiteBlock>
     </>

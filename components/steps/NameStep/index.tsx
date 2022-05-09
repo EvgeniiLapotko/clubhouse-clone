@@ -4,8 +4,17 @@ import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
 import { TextField } from '@mui/material';
 import ModeIcon from '@mui/icons-material/Mode';
+import { useContext, useState } from 'react';
+import { MainContext } from '../../../pages';
 
 export const NameStep = () => {
+  const [value, setValue] = useState<string>('');
+  const { onNextStep } = useContext(MainContext);
+
+  const onClickNextStep = () => {
+    onNextStep();
+  };
+
   return (
     <>
       <StepInfo
@@ -20,9 +29,13 @@ export const NameStep = () => {
           variant='outlined'
           className={'mb-15'}
           fullWidth
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
         />
         <div>
-          <Button>Next</Button>
+          <Button disabled={value.length < 3} onClick={onClickNextStep}>
+            Next
+          </Button>
         </div>
       </WhiteBlock>
     </>

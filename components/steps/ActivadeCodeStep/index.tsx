@@ -2,12 +2,23 @@ import styles from './ActivateCode.module.scss';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+
+import axios from '../../../core/axios';
+import { useRouter } from 'next/router';
+import { Snackbar } from '@mui/material';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 
 export const ActivateCodeStep = () => {
   const [code, setCode] = useState(['', '', '', '']);
+  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const nextDisabled = code.some((v) => !v);
 
@@ -22,6 +33,18 @@ export const ActivateCodeStep = () => {
     if (e.target.nextSibling) {
       e.target.nextSibling.focus();
     }
+  };
+
+  const onSubmit = async () => {
+    try {
+      setIsLoading(true);
+      await axios.get('/todossss');
+      await router.push('/rooms');
+    } catch (e) {
+      setOpen(true);
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -73,7 +96,7 @@ export const ActivateCodeStep = () => {
           </div>
 
           <div>
-            <Button disabled={nextDisabled || isLoading} onClick={() => setIsLoading(true)}>
+            <Button disabled={nextDisabled || isLoading} onClick={onSubmit}>
               Activate
             </Button>
           </div>
@@ -89,6 +112,14 @@ export const ActivateCodeStep = () => {
           </div>
         </div>
       )}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        onClose={() => setOpen(false)}
+        autoHideDuration={3000}
+      >
+        <Alert severity='error'>Code is wrong</Alert>
+      </Snackbar>
     </>
   );
 };
