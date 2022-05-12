@@ -3,9 +3,10 @@ import styles from './CardRoom.module.scss';
 import Avatar from '@mui/material/Avatar';
 import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
+import clsx from 'clsx';
 
 interface CardRoom {
-  users: string[];
+  guest: string[];
   avatars?: string[];
   speakersCount: number;
   listenerCount: number;
@@ -13,7 +14,7 @@ interface CardRoom {
 }
 
 export const CardRoom: React.FC<CardRoom> = ({
-  users,
+  guest,
   avatars = [],
   speakersCount,
   listenerCount,
@@ -28,7 +29,10 @@ export const CardRoom: React.FC<CardRoom> = ({
             return (
               <div
                 key={index}
-                className={index === avatars.length - 1 ? styles.lastAvatar : styles.avatar}
+                className={clsx(
+                  avatars.length > 1 && index === avatars.length - 1 ? styles.lastAvatar : '',
+                  avatars.length === 1 && styles.firstAvatar
+                )}
               >
                 <Avatar src={av} sx={{ width: 70, height: 70 }} />
               </div>
@@ -37,7 +41,7 @@ export const CardRoom: React.FC<CardRoom> = ({
         </div>
         <div className={'d-flex flex-column justify-content-between'} style={{ width: '100%' }}>
           <div className={'mb-10'}>
-            {users.map((user, index) => {
+            {guest.map((user, index) => {
               return (
                 <p key={index} className={styles.users}>
                   {user}

@@ -1,5 +1,19 @@
 .block {
-  padding: 40px;
+  padding: 20px 30px;
   background-color: #fff;
   border-radius: 20px;
+  min-height: 500px;
+  margin-bottom: 40px;
+}
+
+.users {
+  display: inline-flex;
+  flex-direction: column;
+  text-align: center;
+  margin-right: 50px;
+
+  b {
+    font-size: 18px;
+    margin-top: 10px;
+  }
 }

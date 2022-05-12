@@ -3,8 +3,9 @@ import { Button } from '@mui/material';
 import { CardRoom } from '../components/CardRoom';
 import Link from 'next/link';
 import styles from '../components/CardRoom/CardRoom.module.scss';
+import axios from '../core/axios';
 
-export default function Room() {
+export default function Room({ rooms = [] }) {
   return (
     <>
       <Header />
@@ -21,22 +22,41 @@ export default function Room() {
           </Button>
         </div>
         <div className={'d-flex d-wrap'} style={{ marginLeft: '-20px' }}>
-          <Link href={'/rooms/testRoom'}>
-            <a className={styles.block}>
-              <CardRoom
-                users={['user1', 'user2']}
-                speakersCount={3}
-                listenerCount={10}
-                title={'New rooms'}
-                avatars={[
-                  'https://media.istockphoto.com/photos/abstract-human-face-the-power-of-the-mind-artificial-intelligence-picture-id1357759108',
-                  'https://media.istockphoto.com/photos/digitized-model-of-a-male-human-head-science-fiction-robot-concept-picture-id1336292858',
-                ]}
-              />
-            </a>
-          </Link>
+          {rooms.map((room) => {
+            return (
+              <Link href={`/rooms/${room._id}`} key={room._id}>
+                <a className={styles.block}>
+                  <CardRoom
+                    guest={room.guest}
+                    speakersCount={room.speakers}
+                    listenerCount={room.listener}
+                    title={room.title}
+                    avatars={room.avatars}
+                  />
+                </a>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  try {
+    const { data } = await axios.get('/rooms.json');
+    return {
+      props: {
+        rooms: data,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      props: {
+        rooms: [],
+      },
+    };
+  }
+};

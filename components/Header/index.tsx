@@ -16,7 +16,7 @@ export const Header = () => {
         <div className={styles.info}>
           <span>User Name</span>
 
-          <Avatar />
+          <Avatar src={'https://source.unsplash.com/random/100x100?834'} />
         </div>
       </Link>
     </div>

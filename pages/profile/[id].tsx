@@ -8,6 +8,7 @@ import { Button, IconButton } from '@mui/material';
 import { Header } from '../../components/Header';
 import Link from 'next/link';
 import { BackButton } from '../../components/BackButton';
+import axios from '../../core/axios';
 
 export default function Profile() {
   const router = useRouter();
@@ -22,7 +23,11 @@ export default function Profile() {
 
           <div className={'d-flex justify-content-between aligh-items-center mb-30'}>
             <div className={styles.infoBlock}>
-              <Avatar sx={{ width: 100, height: 100 }} src={''} className={'mt-10'} />
+              <Avatar
+                sx={{ width: 100, height: 100 }}
+                src={'https://source.unsplash.com/random/100x100?834'}
+                className={'mt-10'}
+              />
               <div className={'ml-30 mr-30'}>
                 <h2 className={'mt-10 mb-10 '}>User name</h2>
                 <h3 className={'mt-10 mb-10 '}>@usertag</h3>
