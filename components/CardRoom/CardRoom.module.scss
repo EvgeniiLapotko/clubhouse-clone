@@ -1,0 +1,55 @@
+.block {
+  background-color: #fff;
+  max-width: calc(33% - 20px);
+  width: 100%;
+  min-height: 200px;
+  border-radius: 10px;
+  padding: 15px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.avatarBlock {
+  cursor: pointer;
+  display: flex;
+}
+
+.lastAvatar {
+  transform: translate(-30px, 40px);
+  box-shadow: -2px -2px 2px #fff;
+  height: 70px;
+  border-radius: 50px;
+}
+
+.users {
+  color: #a2a2a2;
+  margin: 5px 0;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+}
+
+.infoItem {
+  display: flex;
+  margin-right: 20px;
+  align-items: center;
+  color: gray;
+  cursor: pointer;
+  &:hover {
+    color: #000000;
+  }
+  span {
+    display: inline-block;
+    padding-left: 7px;
+    padding-top: 2px;
+  }
+}

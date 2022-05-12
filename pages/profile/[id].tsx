@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import { Button, IconButton } from '@mui/material';
 import { Header } from '../../components/Header';
 import Link from 'next/link';
+import { BackButton } from '../../components/BackButton';
 
 export default function Profile() {
   const router = useRouter();
@@ -17,12 +18,7 @@ export default function Profile() {
       <Header />
       <div className={'container'}>
         <div style={{ padding: '50px' }}>
-          <Link href={'/rooms'}>
-            <div className={styles.backBLock}>
-              <ArrowBackIcon />
-              <span>Back</span>
-            </div>
-          </Link>
+          <BackButton />
 
           <div className={'d-flex justify-content-between aligh-items-center mb-30'}>
             <div className={styles.infoBlock}>
@@ -56,7 +52,6 @@ export default function Profile() {
           </div>
           <div>
             <p>The search supports synonyms. Try searching for "hamburger" or "logout".</p>
-            <p>I have a lot of skills for work how frontend</p>
           </div>
         </div>
       </div>
