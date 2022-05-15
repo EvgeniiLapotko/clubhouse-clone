@@ -16,12 +16,22 @@ const stepsComponent = {
 type MainContextProps = {
   onNextStep: () => void;
   step: number;
+  setUserData: (data: User) => void;
+  userData: User;
+};
+
+type User = {
+  fullName: string;
+  avatar: string;
+  phone: string;
+  isActive: number;
 };
 
 export const MainContext = React.createContext<MainContextProps>({} as MainContextProps);
 
 export default function Home() {
   const [step, setStep] = useState<number>(0);
+  const [userData, setUserData] = useState<User>();
 
   const onNextStep = () => {
     setStep((prev) => prev + 1);
@@ -29,7 +39,7 @@ export default function Home() {
 
   const Step = stepsComponent[step];
   return (
-    <MainContext.Provider value={{ step, onNextStep }}>
+    <MainContext.Provider value={{ step, onNextStep, userData, setUserData }}>
       <Step />
     </MainContext.Provider>
   );

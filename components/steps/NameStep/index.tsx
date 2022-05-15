@@ -9,9 +9,10 @@ import { MainContext } from '../../../pages';
 
 export const NameStep = () => {
   const [value, setValue] = useState<string>('');
-  const { onNextStep } = useContext(MainContext);
+  const { onNextStep, setUserData, userData } = useContext(MainContext);
 
   const onClickNextStep = () => {
+    setUserData({ ...userData, fullName: value });
     onNextStep();
   };
 
