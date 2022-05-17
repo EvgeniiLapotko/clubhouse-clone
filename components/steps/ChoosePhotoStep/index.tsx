@@ -7,6 +7,8 @@ import Avatar from '@mui/material/Avatar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { MainContext } from '../../../pages';
 import axios from '../../../core/axios';
+import { useRouter } from 'next/router';
+import jsCookie from 'js-cookie';
 
 const uploadFile = async (file: File) => {
   const formData = new FormData();
@@ -22,7 +24,8 @@ const uploadFile = async (file: File) => {
 export const ChoosePhotoStep: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [avatar, setAvatar] = useState<string>('');
-  const { onNextStep, setUserData, userData } = useContext(MainContext);
+  const { setUserData, userData } = useContext(MainContext);
+  const router = useRouter();
 
   const handleChangeImage = async (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -30,10 +33,9 @@ export const ChoosePhotoStep: React.FC = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setUserData({ ...userData, avatar: imageUrl });
-      const data = await uploadFile(file);
-      console.log(data);
-      setAvatar(data.url);
-      setUserData({ ...userData, avatar: data.url });
+      const fileData = await uploadFile(file);
+      setAvatar(fileData.url);
+      setUserData({ ...userData, avatar: fileData.url });
       target.value = '';
     }
   };
@@ -43,6 +45,12 @@ export const ChoosePhotoStep: React.FC = () => {
       inputRef.current.addEventListener('change', handleChangeImage);
     }
   }, []);
+
+  const onSubmit = async () => {
+    const { data } = await axios.post('/auth/activated', userData);
+    jsCookie.set('token', data.token);
+    await router.push('rooms');
+  };
 
   return (
     <>
@@ -62,7 +70,7 @@ export const ChoosePhotoStep: React.FC = () => {
         </div>
         <input id='image' ref={inputRef} hidden type='file' />
         <div>
-          <Button onClick={onNextStep}>Next</Button>
+          <Button onClick={onSubmit}>Next</Button>
         </div>
       </WhiteBlock>
     </>

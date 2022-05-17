@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       isActive: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

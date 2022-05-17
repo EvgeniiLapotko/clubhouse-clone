@@ -2,13 +2,15 @@ import styles from './ActivateCode.module.scss';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import jsCookie from 'js-cookie';
 
 import axios from '../../../core/axios';
 import { useRouter } from 'next/router';
 import { Snackbar } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { MainContext } from '../../../pages';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -19,6 +21,7 @@ export const ActivateCodeStep = () => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { userData, onNextStep, setUserData } = useContext(MainContext);
 
   const nextDisabled = code.some((v) => !v);
 
@@ -38,8 +41,13 @@ export const ActivateCodeStep = () => {
   const onSubmit = async () => {
     try {
       setIsLoading(true);
-      await axios.get('/todossss');
-      await router.push('/rooms');
+      const { data } = await axios.post('/auth', userData);
+      console.log(data);
+      if (data.isActive) {
+        await router.push('/rooms');
+      }
+      setUserData(data);
+      onNextStep();
     } catch (e) {
       setOpen(true);
     }
@@ -94,7 +102,9 @@ export const ActivateCodeStep = () => {
               disabled={isLoading}
             />
           </div>
-
+          <div style={{ color: 'grey', marginBottom: '10px' }}>
+            You can use any code. This step is not active
+          </div>
           <div>
             <Button disabled={nextDisabled || isLoading} onClick={onSubmit}>
               Activate

@@ -7,31 +7,34 @@ import { ActivateCodeStep } from '../components/steps/ActivadeCodeStep';
 
 const stepsComponent = {
   0: WelcomeStep,
-  1: NameStep,
-  2: ChoosePhotoStep,
-  3: EnterPhoneStep,
-  4: ActivateCodeStep,
+  1: EnterPhoneStep,
+  2: ActivateCodeStep,
+  3: NameStep,
+  4: ChoosePhotoStep,
 };
 
 type MainContextProps = {
   onNextStep: () => void;
   step: number;
-  setUserData: (data: User) => void;
-  userData: User;
+  setUserData: (data: UserData) => void;
+  userData: UserData;
 };
 
-type User = {
+export type UserData = {
   fullName: string;
   avatar: string;
   phone: string;
   isActive: number;
+  createdAt: string;
+  updatedAt: string;
+  token?: string;
 };
 
 export const MainContext = React.createContext<MainContextProps>({} as MainContextProps);
 
 export default function Home() {
   const [step, setStep] = useState<number>(0);
-  const [userData, setUserData] = useState<User>();
+  const [userData, setUserData] = useState<UserData>({} as UserData);
 
   const onNextStep = () => {
     setStep((prev) => prev + 1);

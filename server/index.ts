@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import user from '../models';
+import { User } from '../models';
 
 dotenv.config({
   path: 'server/.env',
@@ -23,17 +23,41 @@ const upload = multer({
 });
 
 import './core/db';
+import { createJwtToken } from './untils/createJWTToken';
 
 const app = express();
 
+app.use(express.json());
 app.use(cors());
 
 app.get('/test', async (req, res) => {
   res.send({ test: 'test' });
 });
 
-app.get('/auth', (req, res) => {
-  res.send({ test: 'auth' });
+app.post('/auth', async (req, res) => {
+  const user = await User.findOne({ where: { phone: req.body.phone } });
+  if (!user) {
+    const user = await User.create({
+      fullName: 'Anonymous',
+      isActive: false,
+      phone: req.body.phone,
+      avatar: '',
+    });
+    return res.status(200).json(user);
+  } else {
+    return res.status(200).json(user);
+  }
+});
+
+app.post('/auth/activated', async (req, res) => {
+  const user = await User.findOne({ where: { phone: req.body.phone } });
+  if (user) {
+    user.isActive = true;
+    user.avatar = req.body.avatar;
+    await user.save();
+    const token = createJwtToken(user);
+    res.status(200).send({ ...user, token });
+  }
 });
 
 app.post('/upload', upload.single('avatar'), (req, res) => {

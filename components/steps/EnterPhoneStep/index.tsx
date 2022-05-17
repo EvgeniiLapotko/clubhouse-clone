@@ -14,9 +14,14 @@ type InputValue = {
 
 export const EnterPhoneStep = () => {
   const [inputValues, setValue] = useState<InputValue>({} as InputValue);
-  const { onNextStep } = useContext(MainContext);
+  const { onNextStep, userData, setUserData } = useContext(MainContext);
 
   const nextDisabled = !inputValues.formattedValue || inputValues.formattedValue.includes('_');
+
+  const onSubmit = () => {
+    setUserData({ ...userData, phone: inputValues.formattedValue });
+    onNextStep();
+  };
 
   return (
     <>
@@ -41,7 +46,7 @@ export const EnterPhoneStep = () => {
         />
 
         <div>
-          <Button disabled={nextDisabled} onClick={onNextStep}>
+          <Button disabled={nextDisabled} onClick={onSubmit}>
             Next
           </Button>
         </div>
