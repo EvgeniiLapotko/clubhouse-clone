@@ -4,6 +4,9 @@ import { CardRoom } from '../components/CardRoom';
 import Link from 'next/link';
 import styles from '../components/CardRoom/CardRoom.module.scss';
 import axios from '../core/axios';
+import nookies from 'nookies';
+import { UserApi } from '../api/UserApi';
+import { checkAuth } from '../helpers/checkAuth';
 
 export default function Room({ rooms = [] }) {
   return (
@@ -43,16 +46,25 @@ export default function Room({ rooms = [] }) {
   );
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx) => {
   try {
+    const user = await checkAuth(ctx);
+    if (!user) {
+      return {
+        props: [],
+        redirect: {
+          destination: '/',
+        },
+      };
+    }
     const { data } = await axios.get('/rooms.json');
     return {
       props: {
+        user: user,
         rooms: data,
       },
     };
   } catch (e) {
-    console.log(e);
     return {
       props: {
         rooms: [],

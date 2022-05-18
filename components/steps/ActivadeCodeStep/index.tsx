@@ -2,7 +2,7 @@ import styles from './ActivateCode.module.scss';
 import { WhiteBlock } from '../../WhiteBlock';
 import { Button } from '../../Button';
 import { StepInfo } from '../../StepInfo';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import jsCookie from 'js-cookie';
 
@@ -25,16 +25,17 @@ export const ActivateCodeStep = () => {
 
   const nextDisabled = code.some((v) => !v);
 
-  const handleChangeInput = (e) => {
-    const id = Number(e.target.getAttribute('id')) - 1;
-    const value = e.target.value;
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    const id = Number(target.getAttribute('id'));
+    const value = target.value;
     setCode((prev) => {
       const newArr = [...prev];
       newArr[id] = value;
       return newArr;
     });
-    if (e.target.nextSibling) {
-      e.target.nextSibling.focus();
+    if (target.nextSibling) {
+      (target.nextSibling as HTMLInputElement).focus();
     }
   };
 
@@ -42,10 +43,12 @@ export const ActivateCodeStep = () => {
     try {
       setIsLoading(true);
       const { data } = await axios.post('/auth', userData);
-      console.log(data);
       if (data.isActive) {
+        jsCookie.set('token', data.token);
         await router.push('/rooms');
+        return;
       }
+      jsCookie.remove('token');
       setUserData(data);
       onNextStep();
     } catch (e) {
@@ -65,42 +68,20 @@ export const ActivateCodeStep = () => {
       <div style={{ opacity: isLoading ? 0.5 : undefined }}>
         <WhiteBlock className={styles.block}>
           <div className={styles.inputBlock}>
-            <input
-              type='tel'
-              placeholder='X'
-              maxLength={1}
-              id='1'
-              onChange={handleChangeInput}
-              value={code[0]}
-              disabled={isLoading}
-            />
-            <input
-              type='tel'
-              placeholder='X'
-              maxLength={1}
-              id='2'
-              onChange={handleChangeInput}
-              value={code[1]}
-              disabled={isLoading}
-            />
-            <input
-              type='tel'
-              placeholder='X'
-              maxLength={1}
-              id='3'
-              onChange={handleChangeInput}
-              value={code[2]}
-              disabled={isLoading}
-            />
-            <input
-              type='tel'
-              placeholder='X'
-              maxLength={1}
-              id='4'
-              onChange={handleChangeInput}
-              value={code[3]}
-              disabled={isLoading}
-            />
+            {code.map((c, i) => {
+              return (
+                <input
+                  key={i}
+                  type='tel'
+                  placeholder='X'
+                  maxLength={1}
+                  id={String(i)}
+                  onChange={(e) => handleChangeInput(e)}
+                  value={c}
+                  disabled={isLoading}
+                />
+              );
+            })}
           </div>
           <div style={{ color: 'grey', marginBottom: '10px' }}>
             You can use any code. This step is not active

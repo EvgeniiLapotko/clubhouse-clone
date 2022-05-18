@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { NameStep } from '../components/steps/NameStep';
 import { ChoosePhotoStep } from '../components/steps/ChoosePhotoStep';
 import { ActivateCodeStep } from '../components/steps/ActivadeCodeStep';
+import { checkAuth } from '../helpers/checkAuth';
+import axios from '../core/axios';
 
 const stepsComponent = {
   0: WelcomeStep,
@@ -47,3 +49,23 @@ export default function Home() {
     </MainContext.Provider>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const user = await checkAuth(ctx);
+    if (user) {
+      return {
+        props: [],
+        redirect: {
+          destination: '/rooms',
+        },
+      };
+    }
+  } catch (e) {
+    return {
+      props: {
+        rooms: [],
+      },
+    };
+  }
+};
