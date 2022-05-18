@@ -1,4 +1,5 @@
 import express from 'express';
+require('express-async-errors');
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -11,6 +12,7 @@ import { auth, authActivated } from './controllers/authControllers';
 import { uploadFile } from './controllers/uploadController';
 import { upload } from './untils/multerStorage';
 import { authenticationMiddleware } from './middleware/auth';
+import { errorHandler } from './middleware/error-handler';
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.get('/auth/me', authenticationMiddleware, async (req, res) => {
   const { user } = req;
   res.status(200).json(user);
 });
+
+app.use(errorHandler);
 
 app.listen(3001, () => {
   console.log('SERVER RUN:3001');
