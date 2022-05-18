@@ -50,22 +50,20 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = async (ctx) => {
-  try {
-    const user = await checkAuth(ctx);
-    if (user) {
-      return {
-        props: [],
-        redirect: {
-          destination: '/rooms',
-        },
-      };
-    }
-  } catch (e) {
-    return {
-      props: {
-        rooms: [],
-      },
-    };
-  }
-};
+// export const getServerSideProps = async (ctx) => {
+//   const user = await checkAuth(ctx);
+//   if (user) {
+//     return {
+//       props: {},
+//       redirect: {
+//         destination: '/rooms',
+//       },
+//     };
+//   } else {
+//     return {
+//       props: {
+//         rooms: [],
+//       },
+//     };
+//   }
+// };

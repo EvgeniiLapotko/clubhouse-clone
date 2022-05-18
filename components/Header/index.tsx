@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import styles from './Header.module.scss';
 import Link from 'next/link';
 
-export const Header = () => {
+export const Header = ({ user }) => {
   return (
     <div className={styles.block}>
       <Link href={'/rooms'} className={'cup'}>
@@ -14,9 +14,9 @@ export const Header = () => {
 
       <Link href={'/profile/123'} className={'cup'}>
         <div className={styles.info}>
-          <span>User Name</span>
+          <span>{user?.fullName}</span>
 
-          <Avatar src={'https://source.unsplash.com/random/100x100?834'} />
+          <Avatar src={user?.avatar} />
         </div>
       </Link>
     </div>

@@ -8,10 +8,13 @@ import nookies from 'nookies';
 import { UserApi } from '../api/UserApi';
 import { checkAuth } from '../helpers/checkAuth';
 
-export default function Room({ rooms = [] }) {
+export default function Room({ rooms = [], user }) {
+  if (typeof window !== undefined) {
+    // console.log(user);
+  }
   return (
     <>
-      <Header />
+      <Header user={user.data} />
       <div className={'container'}>
         <div className={'d-flex justify-content-between aligh-items-center mv-30'}>
           <h1>All rooms</h1>
@@ -57,11 +60,10 @@ export const getServerSideProps = async (ctx) => {
         },
       };
     }
-    const { data } = await axios.get('/rooms.json');
     return {
       props: {
-        user: user,
-        rooms: data,
+        user,
+        // rooms: data,
       },
     };
   } catch (e) {
