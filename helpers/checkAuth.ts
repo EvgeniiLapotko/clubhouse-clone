@@ -7,6 +7,7 @@ export const checkAuth = async (ctx: GetServerSidePropsContext): Promise<any | b
   try {
     const { token } = nookies.get(ctx);
     if (token) {
+      //@ts-ignore
       axios.defaults.headers.Authorization = 'Bearer ' + token;
     }
     const user = await UserApi.getMe();

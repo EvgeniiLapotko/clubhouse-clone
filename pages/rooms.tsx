@@ -3,12 +3,15 @@ import { Button } from '@mui/material';
 import { CardRoom } from '../components/CardRoom';
 import Link from 'next/link';
 import styles from '../components/CardRoom/CardRoom.module.scss';
-import axios from '../core/axios';
-import nookies from 'nookies';
-import { UserApi } from '../api/UserApi';
 import { checkAuth } from '../helpers/checkAuth';
+import Modal from '@mui/material/Modal';
+import { useState } from 'react';
+import { ModalBlock } from '../components/ModalBlock';
 
 export default function Room({ rooms = [], user }) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   if (typeof window !== undefined) {
     // console.log(user);
   }
@@ -23,6 +26,7 @@ export default function Room({ rooms = [], user }) {
             color={'primary'}
             style={{ borderRadius: '50px' }}
             size={'large'}
+            onClick={handleOpen}
           >
             Start a room
           </Button>
@@ -45,6 +49,11 @@ export default function Room({ rooms = [], user }) {
           })}
         </div>
       </div>
+      <Modal open={open} onClose={handleClose}>
+        <div>
+          <ModalBlock onClose={handleClose} />
+        </div>
+      </Modal>
     </>
   );
 }
