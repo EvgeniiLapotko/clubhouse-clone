@@ -2,11 +2,15 @@ import { Header } from '../../components/Header';
 import { BackButton } from '../../components/BackButton';
 import { RoomView } from '../../components/RoomView';
 import axios from '../../core/axios';
+import { checkAuth } from '../../helpers/checkAuth';
 
-export default function Id({ room }) {
+export default function Id({ room, user }) {
+  if (typeof window !== undefined) {
+    console.log(room);
+  }
   return (
     <>
-      <Header />
+      <Header user={user.data} />
       <div className={'container'}>
         <BackButton title={'All rooms'} />
         <RoomView title={room?.title} />
@@ -15,21 +19,31 @@ export default function Id({ room }) {
   );
 }
 
-export const getServerSideProps = async (context) => {
-  const { query } = context;
+export const getServerSideProps = async (ctx) => {
+  const { query } = ctx;
   try {
-    const { data } = await axios.get('/rooms.json');
-    const currentRoom = data.find((room) => room._id === query.id);
+    const user = await checkAuth(ctx);
+    if (!user) {
+      return {
+        props: [],
+        redirect: {
+          destination: '/',
+        },
+      };
+    }
+    const { data } = await axios.get(`rooms/${query.id}`);
     return {
       props: {
-        room: currentRoom,
+        user,
+        room: data,
       },
     };
   } catch (e) {
     console.log(e);
     return {
       props: {
-        room: {},
+        rooms: [],
+        user: { data: {} },
       },
     };
   }

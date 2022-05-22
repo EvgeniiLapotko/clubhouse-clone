@@ -9,6 +9,7 @@ dotenv.config({
 
 import './core/db';
 import { auth, authActivated } from './controllers/authControllers';
+import RoomControllers from './controllers/roomControllers';
 import { uploadFile } from './controllers/uploadController';
 import { upload } from './untils/multerStorage';
 import { authenticationMiddleware } from './middleware/auth';
@@ -24,6 +25,11 @@ app.get('/test', async (req, res) => {
 });
 
 app.post('/upload', upload.single('avatar'), uploadFile);
+
+app.get('/rooms', RoomControllers.getRooms);
+app.get('/rooms/:id', RoomControllers.getOne);
+app.post('/rooms', RoomControllers.createRoom);
+app.delete('/rooms/:id', RoomControllers.deleteRoom);
 
 app.post('/auth', auth);
 app.post('/auth/activated', authActivated);

@@ -25,7 +25,7 @@ export const CardRoom: React.FC<CardRoom> = ({
       <div className={styles.title}>{title}</div>
       <div className={'d-flex'} style={{ height: 'calc(100% - 40px)' }}>
         <div className={styles.avatarBlock}>
-          {avatars.map((av, index) => {
+          {avatars?.map((av, index) => {
             return (
               <div
                 key={index}
@@ -41,7 +41,7 @@ export const CardRoom: React.FC<CardRoom> = ({
         </div>
         <div className={'d-flex flex-column justify-content-between'} style={{ width: '100%' }}>
           <div className={'mb-10'}>
-            {guest.map((user, index) => {
+            {guest?.map((user, index) => {
               return (
                 <p key={index} className={styles.users}>
                   {user}
@@ -52,7 +52,7 @@ export const CardRoom: React.FC<CardRoom> = ({
           <div className={styles.info}>
             <div className={styles.infoItem}>
               <PersonIcon />
-              <span>{speakersCount}</span>
+              <span>{speakersCount || 0}</span>
             </div>
             <div className={styles.infoItem}>
               <ChatIcon />

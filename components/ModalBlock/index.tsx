@@ -7,6 +7,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import LockIcon from '@mui/icons-material/Lock';
 import CelebrationIcon from '@mui/icons-material/Celebration';
 import clsx from 'clsx';
+import axios from '../../core/axios';
+import { useRouter } from 'next/router';
 interface ModalBlockProps {
   onClose: () => void;
 }
@@ -15,12 +17,19 @@ export const ModalBlock: React.FC<ModalBlockProps> = ({ onClose }) => {
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const [roomType, setRoomType] = useState<string>('open');
+  const router = useRouter();
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!value.length) {
       setError(true);
       return;
     }
+    const { data } = await axios.post('rooms', {
+      title: value,
+      type: roomType,
+    });
+    onClose();
+    await router.push(`rooms/${data.id}`);
   };
   return (
     <div className={styles.wrapper}>

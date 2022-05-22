@@ -7,13 +7,14 @@ import { checkAuth } from '../helpers/checkAuth';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import { ModalBlock } from '../components/ModalBlock';
+import axios from '../core/axios';
 
 export default function Room({ rooms = [], user }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   if (typeof window !== undefined) {
-    // console.log(user);
+    // console.log(rooms);
   }
   return (
     <>
@@ -34,14 +35,14 @@ export default function Room({ rooms = [], user }) {
         <div className={'d-flex d-wrap'} style={{ marginLeft: '-20px' }}>
           {rooms.map((room) => {
             return (
-              <Link href={`/rooms/${room._id}`} key={room._id}>
+              <Link href={`/rooms/${room.id}`} key={room.id}>
                 <a className={styles.block}>
                   <CardRoom
                     guest={room.guest}
-                    speakersCount={room.speakers}
-                    listenerCount={room.listener}
+                    speakersCount={room.speackers.count}
+                    listenerCount={room.listenersCount}
                     title={room.title}
-                    avatars={room.avatars}
+                    avatars={room.speackers.avatars}
                   />
                 </a>
               </Link>
@@ -69,10 +70,11 @@ export const getServerSideProps = async (ctx) => {
         },
       };
     }
+    const { data } = await axios.get('rooms');
     return {
       props: {
         user,
-        // rooms: data,
+        rooms: data,
       },
     };
   } catch (e) {
