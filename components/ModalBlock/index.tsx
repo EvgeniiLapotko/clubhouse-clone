@@ -7,8 +7,10 @@ import PeopleIcon from '@mui/icons-material/People';
 import LockIcon from '@mui/icons-material/Lock';
 import CelebrationIcon from '@mui/icons-material/Celebration';
 import clsx from 'clsx';
-import axios from '../../core/axios';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { createRoom } from '../../redux/slices/roomSlice';
+import { AppDispatch } from '../../redux/store';
 interface ModalBlockProps {
   onClose: () => void;
 }
@@ -18,18 +20,16 @@ export const ModalBlock: React.FC<ModalBlockProps> = ({ onClose }) => {
   const [error, setError] = useState<boolean>(false);
   const [roomType, setRoomType] = useState<string>('open');
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async () => {
     if (!value.length) {
       setError(true);
       return;
     }
-    const { data } = await axios.post('rooms', {
-      title: value,
-      type: roomType,
-    });
+    const { payload } = await dispatch(createRoom({ title: value, type: roomType }));
     onClose();
-    await router.push(`rooms/${data.id}`);
+    await router.push(`rooms/${payload.id}`);
   };
   return (
     <div className={styles.wrapper}>

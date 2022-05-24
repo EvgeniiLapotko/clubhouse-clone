@@ -7,15 +7,19 @@ import { checkAuth } from '../helpers/checkAuth';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import { ModalBlock } from '../components/ModalBlock';
-import axios from '../core/axios';
+import { useSelector } from 'react-redux';
+import { fetchRooms, selectRooms } from '../redux/slices/roomSlice';
+import { RootState, wrapper } from '../redux/store';
 
 export default function Room({ rooms = [], user }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const roomsStore = useSelector((state: RootState) => selectRooms(state.roomReducer));
   if (typeof window !== undefined) {
-    // console.log(rooms);
+    // console.log(roomsStore);
   }
+
   return (
     <>
       <Header user={user.data} />
@@ -33,7 +37,7 @@ export default function Room({ rooms = [], user }) {
           </Button>
         </div>
         <div className={'d-flex d-wrap'} style={{ marginLeft: '-20px' }}>
-          {rooms.map((room) => {
+          {roomsStore?.map((room) => {
             return (
               <Link href={`/rooms/${room.id}`} key={room.id}>
                 <a className={styles.block}>
@@ -59,7 +63,7 @@ export default function Room({ rooms = [], user }) {
   );
 }
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async (ctx) => {
   try {
     const user = await checkAuth(ctx);
     if (!user) {
@@ -70,18 +74,13 @@ export const getServerSideProps = async (ctx) => {
         },
       };
     }
-    const { data } = await axios.get('rooms');
+    await store.dispatch(fetchRooms());
     return {
       props: {
         user,
-        rooms: data,
       },
     };
   } catch (e) {
-    return {
-      props: {
-        rooms: [],
-      },
-    };
+    throw new Error(e);
   }
-};
+});
