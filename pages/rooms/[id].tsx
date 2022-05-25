@@ -3,14 +3,15 @@ import { BackButton } from '../../components/BackButton';
 import { RoomView } from '../../components/RoomView';
 import axios from '../../core/axios';
 import { checkAuth } from '../../helpers/checkAuth';
+import { wrapper } from '../../redux/store';
 
-export default function Id({ room, user }) {
+export default function Id({ room }) {
   if (typeof window !== undefined) {
-    console.log(room);
+    // console.log(room);
   }
   return (
     <>
-      <Header user={user.data} />
+      <Header />
       <div className={'container'}>
         <BackButton title={'All rooms'} />
         <RoomView title={room?.title} />
@@ -19,10 +20,10 @@ export default function Id({ room, user }) {
   );
 }
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async (ctx) => {
   const { query } = ctx;
   try {
-    const user = await checkAuth(ctx);
+    const user = await checkAuth(ctx, store);
     if (!user) {
       return {
         props: [],
@@ -34,7 +35,6 @@ export const getServerSideProps = async (ctx) => {
     const { data } = await axios.get(`rooms/${query.id}`);
     return {
       props: {
-        user,
         room: data,
       },
     };
@@ -47,4 +47,4 @@ export const getServerSideProps = async (ctx) => {
       },
     };
   }
-};
+});

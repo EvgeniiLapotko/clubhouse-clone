@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import roomReducer from './slices/roomSlice';
+import userReducer from './slices/userSlice';
 import { Context, createWrapper } from 'next-redux-wrapper';
 
 const rootReducer = combineReducers({
   roomReducer,
+  userReducer,
 });
 
 export const store = configureStore({

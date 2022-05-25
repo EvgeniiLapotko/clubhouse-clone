@@ -22,7 +22,7 @@ export default function Room({ rooms = [], user }) {
 
   return (
     <>
-      <Header user={user.data} />
+      <Header />
       <div className={'container'}>
         <div className={'d-flex justify-content-between aligh-items-center mv-30'}>
           <h1>All rooms</h1>
@@ -65,7 +65,7 @@ export default function Room({ rooms = [], user }) {
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async (ctx) => {
   try {
-    const user = await checkAuth(ctx);
+    const user = await checkAuth(ctx, store);
     if (!user) {
       return {
         props: [],
@@ -75,11 +75,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
       };
     }
     await store.dispatch(fetchRooms());
-    return {
-      props: {
-        user,
-      },
-    };
   } catch (e) {
     throw new Error(e);
   }

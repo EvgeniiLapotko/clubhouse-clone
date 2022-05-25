@@ -10,30 +10,30 @@ import Link from 'next/link';
 import { BackButton } from '../../components/BackButton';
 import axios from '../../core/axios';
 import { checkAuth } from '../../helpers/checkAuth';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../redux/slices/userSlice';
+import { RootState, wrapper } from '../../redux/store';
 
-export default function Profile({ user }) {
+export default function Profile() {
   const router = useRouter();
   const { id } = router.query;
+  const userData = useSelector((state: RootState) => selectUser(state.userReducer));
 
   return (
     <>
-      <Header user={user.data} />
+      <Header />
       <div className={'container'}>
         <div style={{ padding: '50px' }}>
           <BackButton />
 
           <div className={'d-flex justify-content-between aligh-items-center mb-30'}>
             <div className={styles.infoBlock}>
-              <Avatar
-                sx={{ width: 100, height: 100 }}
-                src={user?.data.avatar}
-                className={'mt-10'}
-              />
+              <Avatar sx={{ width: 100, height: 100 }} src={userData?.avatar} className={'mt-10'} />
               <div className={'ml-30 mr-30'}>
-                <h2 className={'mt-10 mb-10 '}>{user?.data.fullName}</h2>
+                <h2 className={'mt-10 mb-10 '}>{userData?.fullName}</h2>
                 <h3 className={'mt-10 mb-10 '}>
                   @
-                  {user.data.fullName
+                  {userData?.fullName
                     .split(' ')
                     .map((a) => a.toLowerCase())
                     .join('')}
@@ -71,9 +71,9 @@ export default function Profile({ user }) {
   );
 }
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async (ctx) => {
   try {
-    const user = await checkAuth(ctx);
+    const user = await checkAuth(ctx, store);
     if (!user) {
       return {
         props: [],
@@ -82,17 +82,7 @@ export const getServerSideProps = async (ctx) => {
         },
       };
     }
-    return {
-      props: {
-        user,
-        // rooms: data,
-      },
-    };
   } catch (e) {
-    return {
-      props: {
-        user: {},
-      },
-    };
+    throw new Error(e);
   }
-};
+});
