@@ -35,18 +35,21 @@ io.on('connection', (socket) => {
 
   socket.on('CLIENT:ROOMS/USER_JOIN', ({ roomId, userData }) => {
     console.log('user connect to room', roomId);
-    socket.join(`rooms/${roomId}`);
-    socket.to(`rooms/${roomId}`).emit('SERVER:ROOMS/JOINED', userData);
     rooms[socket.id] = { roomId, user: userData };
+    socket.join(`rooms/${roomId}`);
+    io.in(`rooms/${roomId}`).emit(
+      'SERVER:ROOMS/JOINED',
+      Object.values(rooms)
+        .filter((obj) => obj.roomId === roomId)
+        .map((obj) => obj.user)
+    );
   });
 
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id);
-    const { roomId, user } = rooms[socket.id];
+    const { roomId = '', user } = rooms[socket.id];
     socket.to(`rooms/${roomId}`).emit('SERVER:ROOMS/LEAVE', user);
-    if (rooms[socket.id]) {
-      delete rooms[socket.id];
-    }
+    delete rooms[socket.id];
   });
 });
 

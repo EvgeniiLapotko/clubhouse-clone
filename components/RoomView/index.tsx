@@ -24,7 +24,7 @@ export const RoomView: React.FC<RoomView> = ({ title }) => {
   const ioRef = useRef<Socket>();
 
   const userData = useSelector((state: RootState) => selectUser(state.userReducer));
-  const [users, setUsers] = useState([userData]);
+  const [users, setUsers] = useState([]);
   if (typeof window !== undefined) {
     // console.log(room);
   }
@@ -33,8 +33,8 @@ export const RoomView: React.FC<RoomView> = ({ title }) => {
       ioRef.current = socket('http://localhost:3001');
       ioRef.current.emit('CLIENT:ROOMS/USER_JOIN', { roomId: id, userData });
 
-      ioRef.current.on('SERVER:ROOMS/JOINED', (user) => {
-        setUsers((prev) => [...prev, user]);
+      ioRef.current.on('SERVER:ROOMS/JOINED', (users) => {
+        setUsers(users);
       });
       ioRef.current.on('SERVER:ROOMS/LEAVE', (user) => {
         setUsers((prev) => prev.filter((obj) => obj.id !== user.id));
