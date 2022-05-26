@@ -23,6 +23,7 @@ type MainContextProps = {
 };
 
 export type UserData = {
+  id: number;
   fullName: string;
   avatar: string;
   phone: string;

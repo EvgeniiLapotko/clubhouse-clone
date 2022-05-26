@@ -26,6 +26,11 @@ export const fetchRooms = createAsyncThunk('rooms', async (thunkAPI) => {
   return data;
 });
 
+// export const getRoom = createAsyncThunk('rooms/getOne', async (thunkAPI) => {
+//   const { data } = await axios.get(`rooms/${query.id}`);
+//   return data;
+// });
+
 export const createRoom = createAsyncThunk(
   'rooms/create',
   async (arg: { title: string; type: string }) => {

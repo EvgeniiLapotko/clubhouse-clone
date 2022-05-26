@@ -4,11 +4,13 @@ import { RoomView } from '../../components/RoomView';
 import axios from '../../core/axios';
 import { checkAuth } from '../../helpers/checkAuth';
 import { wrapper } from '../../redux/store';
+import React from 'react';
 
 export default function Id({ room }) {
   if (typeof window !== undefined) {
     // console.log(room);
   }
+
   return (
     <>
       <Header />
@@ -39,12 +41,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
       },
     };
   } catch (e) {
-    console.log(e);
-    return {
-      props: {
-        rooms: [],
-        user: { data: {} },
-      },
-    };
+    throw new Error(e);
   }
 });
