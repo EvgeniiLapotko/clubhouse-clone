@@ -10,23 +10,33 @@ class RoomController {
       res.status(500).json({ message: e });
     }
   }
+
   async createRoom(req: express.Request, res: express.Response) {
     try {
       const { body } = req;
       const room = await Room.create({
         title: body.title,
         type: body.type,
-        listenersCount: 0,
-        speackers: {
-          avatars: ['', ''],
-          count: 0,
-        },
+        speakers: [],
       });
       res.status(200).json(room);
     } catch (e) {
       res.status(500).json({ message: e });
     }
   }
+
+  async updateRoom(req: express.Request, res: express.Response) {
+    try {
+      const { body } = req;
+      const room = await Room.findOne({ where: { id: +body.id } });
+      room.speakers = body.speakers;
+      await room.save();
+      res.status(200).json(room);
+    } catch (e) {
+      res.status(500).json({ message: e });
+    }
+  }
+
   async getOne(req: express.Request, res: express.Response) {
     try {
       const room = await Room.findOne({ where: { id: +req.params.id } });
@@ -35,6 +45,7 @@ class RoomController {
       res.status(500).json({ message: e, text: 'room not found' });
     }
   }
+
   async deleteRoom(req: express.Request, res: express.Response) {
     try {
       const room = await Room.destroy({ where: { id: +req.params.id } });

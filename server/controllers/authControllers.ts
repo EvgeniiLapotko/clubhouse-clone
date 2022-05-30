@@ -14,8 +14,8 @@ export const auth = async (req: express.Request, res: express.Response) => {
     return res.status(200).json(user);
   } else {
     const token = createJwtToken(user);
-    user.token = token;
-    res.status(200).json(user);
+    // user.token = token;
+    res.status(200).json({ ...user.dataValues, token });
   }
 };
 

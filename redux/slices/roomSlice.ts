@@ -6,11 +6,9 @@ interface Room {
   id: number;
   title: string;
   type: string;
-  listenersCount: number;
   createdAt: string;
   updatedAt: string;
-  speackers: { count: number; avatars: string[] };
-  guest?: string[];
+  speakers: any[];
 }
 
 export interface RoomState {
@@ -43,6 +41,18 @@ export const createRoom = createAsyncThunk(
   }
 );
 
+export const updateSpeakersRoom = createAsyncThunk(
+  'rooms/update',
+  async (arg: { id: any; speakers: any[] }) => {
+    const { id, speakers } = arg;
+    const { data } = await axios.patch('rooms', {
+      id,
+      speakers,
+    });
+    return data;
+  }
+);
+
 export const roomSlice = createSlice({
   name: 'rooms',
   initialState,
@@ -52,6 +62,10 @@ export const roomSlice = createSlice({
       state.rooms = actions.payload;
     });
     builder.addCase(createRoom.fulfilled, (state, actions) => {
+      state.rooms.push(actions.payload);
+    });
+    builder.addCase(updateSpeakersRoom.fulfilled, (state, actions) => {
+      console.log(actions);
       state.rooms.push(actions.payload);
     });
     builder.addCase(HYDRATE, (state, action: any) => {

@@ -16,8 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Room.init({
     title: DataTypes.STRING,
     type: DataTypes.STRING,
-    speackers: DataTypes.JSON,
-    listenersCount: DataTypes.INTEGER
+    speakers: DataTypes.JSON
   }, {
     sequelize,
     modelName: 'Room',

@@ -6,45 +6,38 @@ import ChatIcon from '@mui/icons-material/Chat';
 import clsx from 'clsx';
 
 interface CardRoom {
-  guest: string[];
-  avatars?: string[];
-  speakersCount: number;
-  listenerCount: number;
+  speakers: any[];
   title: string;
 }
 
-export const CardRoom: React.FC<CardRoom> = ({
-  guest,
-  avatars = [],
-  speakersCount,
-  listenerCount,
-  title,
-}) => {
+export const CardRoom: React.FC<CardRoom> = ({ speakers, title }) => {
   return (
     <>
       <div className={styles.title}>{title}</div>
       <div className={'d-flex'} style={{ height: 'calc(100% - 40px)' }}>
         <div className={styles.avatarBlock}>
-          {avatars?.map((av, index) => {
+          {speakers?.slice(0, 2).map((speaker, index) => {
             return (
               <div
                 key={index}
                 className={clsx(
-                  avatars.length > 1 && index === avatars.length - 1 ? styles.lastAvatar : '',
-                  avatars.length === 1 && styles.firstAvatar
+                  speakers.length > 1 && index === speakers.length - 1 ? styles.lastAvatar : '',
+                  speakers.length === 1 && styles.firstAvatar
                 )}
               >
-                <Avatar src={av} sx={{ width: 70, height: 70 }} />
+                <Avatar src={speaker.avatar} sx={{ width: 70, height: 70 }} />
               </div>
             );
           })}
         </div>
+
         <div className={'d-flex flex-column justify-content-between'} style={{ width: '100%' }}>
           <div className={'mb-10'}>
-            {guest?.map((user, index) => {
+            {!speakers.length && <h4 style={{ color: '#939393' }}>Room's empty</h4>}
+            {speakers?.slice(0, 4).map((user, index) => {
               return (
                 <p key={index} className={styles.users}>
-                  {user}
+                  {user.fullName}
                 </p>
               );
             })}
@@ -52,11 +45,7 @@ export const CardRoom: React.FC<CardRoom> = ({
           <div className={styles.info}>
             <div className={styles.infoItem}>
               <PersonIcon />
-              <span>{speakersCount || 0}</span>
-            </div>
-            <div className={styles.infoItem}>
-              <ChatIcon />
-              <span>{listenerCount}</span>
+              <span>{speakers.length}</span>
             </div>
           </div>
         </div>

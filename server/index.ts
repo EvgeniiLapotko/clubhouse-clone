@@ -62,6 +62,7 @@ app.post('/upload', upload.single('avatar'), uploadFile);
 app.get('/rooms', RoomControllers.getRooms);
 app.get('/rooms/:id', RoomControllers.getOne);
 app.post('/rooms', RoomControllers.createRoom);
+app.patch('/rooms', RoomControllers.updateRoom);
 app.delete('/rooms/:id', RoomControllers.deleteRoom);
 
 app.post('/auth', auth);

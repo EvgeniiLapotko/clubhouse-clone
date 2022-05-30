@@ -46,7 +46,6 @@ export const ActivateCodeStep = () => {
       if (data.isActive) {
         jsCookie.set('token', data.token);
         await router.push('/rooms');
-        return;
       }
       jsCookie.remove('token');
       setUserData(data);

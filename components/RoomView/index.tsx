@@ -6,10 +6,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { User } from '../User';
 import axios from '../../core/axios';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 import { selectUser } from '../../redux/slices/userSlice';
 import socket, { Socket } from 'socket.io-client';
+import { updateSpeakersRoom } from '../../redux/slices/roomSlice';
 
 interface RoomView {
   title: string | string[];
@@ -22,6 +23,7 @@ export const RoomView: React.FC<RoomView> = ({ title }) => {
   const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef(null);
   const ioRef = useRef<Socket>();
+  const dispatch = useDispatch<AppDispatch>();
 
   const userData = useSelector((state: RootState) => selectUser(state.userReducer));
   const [users, setUsers] = useState([]);
@@ -33,11 +35,15 @@ export const RoomView: React.FC<RoomView> = ({ title }) => {
       ioRef.current = socket('http://localhost:3001');
       ioRef.current.emit('CLIENT:ROOMS/USER_JOIN', { roomId: id, userData });
 
-      ioRef.current.on('SERVER:ROOMS/JOINED', (users) => {
+      ioRef.current.on('SERVER:ROOMS/JOINED', async (users) => {
         setUsers(users);
+        const { payload } = await dispatch(updateSpeakersRoom({ id, speakers: users }));
       });
-      ioRef.current.on('SERVER:ROOMS/LEAVE', (user) => {
+      ioRef.current.on('SERVER:ROOMS/LEAVE', async (user) => {
         setUsers((prev) => prev.filter((obj) => obj.id !== user.id));
+        const { payload } = await dispatch(
+          updateSpeakersRoom({ id, speakers: users.filter((u) => u.id !== user.id) })
+        );
       });
 
       // setUsers((prev) => {
