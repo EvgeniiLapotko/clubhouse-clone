@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../core/axios';
 import { HYDRATE } from 'next-redux-wrapper';
 
@@ -19,7 +19,7 @@ const initialState: RoomState = {
   rooms: [],
 };
 
-export const fetchRooms = createAsyncThunk('rooms', async (thunkAPI) => {
+export const fetchRooms = createAsyncThunk('rooms', async () => {
   const { data } = await axios.get('rooms');
   return data;
 });
@@ -41,18 +41,6 @@ export const createRoom = createAsyncThunk(
   }
 );
 
-export const updateSpeakersRoom = createAsyncThunk(
-  'rooms/update',
-  async (arg: { id: any; speakers: any[] }) => {
-    const { id, speakers } = arg;
-    const { data } = await axios.patch('rooms', {
-      id,
-      speakers,
-    });
-    return data;
-  }
-);
-
 export const roomSlice = createSlice({
   name: 'rooms',
   initialState,
@@ -62,10 +50,6 @@ export const roomSlice = createSlice({
       state.rooms = actions.payload;
     });
     builder.addCase(createRoom.fulfilled, (state, actions) => {
-      state.rooms.push(actions.payload);
-    });
-    builder.addCase(updateSpeakersRoom.fulfilled, (state, actions) => {
-      console.log(actions);
       state.rooms.push(actions.payload);
     });
     builder.addCase(HYDRATE, (state, action: any) => {

@@ -25,18 +25,6 @@ class RoomController {
     }
   }
 
-  async updateRoom(req: express.Request, res: express.Response) {
-    try {
-      const { body } = req;
-      const room = await Room.findOne({ where: { id: +body.id } });
-      room.speakers = body.speakers;
-      await room.save();
-      res.status(200).json(room);
-    } catch (e) {
-      res.status(500).json({ message: e });
-    }
-  }
-
   async getOne(req: express.Request, res: express.Response) {
     try {
       const room = await Room.findOne({ where: { id: +req.params.id } });

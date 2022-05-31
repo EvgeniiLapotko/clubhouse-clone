@@ -41,10 +41,7 @@ export default function Room({ rooms = [], user }) {
             return (
               <Link href={`/rooms/${room.id}`} key={room.id}>
                 <a className={styles.block}>
-                  <CardRoom
-                    speakers={room.speakers}
-                    title={room.title}
-                  />
+                  <CardRoom speakers={room.speakers} title={room.title} />
                 </a>
               </Link>
             );

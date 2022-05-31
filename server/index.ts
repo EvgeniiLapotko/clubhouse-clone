@@ -16,6 +16,8 @@ import { authenticationMiddleware } from './middleware/auth';
 import { errorHandler } from './middleware/error-handler';
 import { Server } from 'socket.io';
 import http from 'http';
+import { Room } from '../models';
+import { getUsersFromRoom } from './untils/getUsersFromRoom';
 
 const app = express();
 const server = http.createServer(app);
@@ -35,14 +37,13 @@ io.on('connection', (socket) => {
 
   socket.on('CLIENT:ROOMS/USER_JOIN', ({ roomId, userData }) => {
     console.log('user connect to room', roomId);
+
     rooms[socket.id] = { roomId, user: userData };
     socket.join(`rooms/${roomId}`);
-    io.in(`rooms/${roomId}`).emit(
-      'SERVER:ROOMS/JOINED',
-      Object.values(rooms)
-        .filter((obj) => obj.roomId === roomId)
-        .map((obj) => obj.user)
-    );
+    const users = getUsersFromRoom(rooms, roomId);
+
+    io.in(`rooms/${roomId}`).emit('SERVER:ROOMS/JOINED', users);
+    Room.update({ speakers: users }, { where: { id: roomId } });
   });
 
   socket.on('disconnect', () => {
@@ -50,6 +51,8 @@ io.on('connection', (socket) => {
     const { roomId = '', user } = rooms[socket.id];
     socket.to(`rooms/${roomId}`).emit('SERVER:ROOMS/LEAVE', user);
     delete rooms[socket.id];
+    const users = getUsersFromRoom(rooms, roomId);
+    Room.update({ speakers: users }, { where: { id: roomId } });
   });
 });
 
@@ -62,7 +65,6 @@ app.post('/upload', upload.single('avatar'), uploadFile);
 app.get('/rooms', RoomControllers.getRooms);
 app.get('/rooms/:id', RoomControllers.getOne);
 app.post('/rooms', RoomControllers.createRoom);
-app.patch('/rooms', RoomControllers.updateRoom);
 app.delete('/rooms/:id', RoomControllers.deleteRoom);
 
 app.post('/auth', auth);
